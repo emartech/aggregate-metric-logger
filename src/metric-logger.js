@@ -1,6 +1,6 @@
 'use strict';
 
-const uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 const loggerFactory = require('@emartech/json-logger');
 const { getSeconds, startOfMinute, addSeconds } = require('date-fns');
 const { omit, pick, fromPairs, toPairs } = require('lodash');
