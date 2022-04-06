@@ -4,7 +4,9 @@
   "description": "aggregate metrics in memory for logging",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest",
+    "test": "npm run lint && npm run test:once",
+    "lint": "eslint src/",
+    "test:once": "jest",
     "test:watch": "jest --watch --bail"
   },
   "repository": {
@@ -32,6 +34,9 @@
   "devDependencies": {
     "@sinonjs/fake-timers": "^6.0.0",
     "@types/jest": "^25.1.3",
+    "eslint": "^8.12.0",
+    "eslint-config-emarsys": "^5.1.0",
+    "eslint-plugin-jest": "^26.1.3",
     "jest": "^25.1.0"
   }
 }
