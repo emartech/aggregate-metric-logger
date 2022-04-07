@@ -29,7 +29,7 @@ metricLogger.warn('etwas-went-wrong', { customer_id: 11 });
 
 ### Measure values
 
-If you want aggregate measuremts about something you need to simply call the `measure` method
+If you want aggregate measurements about something you need to simply call the `measure` method
 for each value:
 
 ```js
@@ -44,16 +44,16 @@ for each measured tags. (Uses `@emartech/json-logger` behind the scenes for logg
 
 ### Measuring durations
 
-For duration measuremts, there are two convinience methods: `start`, and `stop`;
+For duration measurements, there are two convenient methods: `start`, and `stop`;
 
 You start the measurement with `start`, the counted value for aggregation will be the duration
-between this `start` and the matcing `stop` call;
+between this `start` and the matching `stop` call;
 
 ```js
 function exampleIOHeavyFunction() {
-  const measurementId = metricLogger.start('tag-for-the-measuement');
+  const measurement = metricLogger.start('tag-for-the-measuement');
   const result = db.findItems();
-  metricLogger.stop(measurementId);
+  metricLogger.stop(measurement);
   return result;
 }
 ```
@@ -66,15 +66,15 @@ params in an object to `count` and `start` as the last optional argument:
 ```js
 metricLogger.count('thing-to-count', 14, { customer_id: 12 });
 
-const measurementId = metricLogger.start(
+const measurement = metricLogger.start(
   'tag-for-the-measuement',
   { event_type: 'nyul', account: 3 }
 );
 ```
 
-A separete log entry will be created for each seen value combinations seen in the extra params
-and these extra params will appended to the log entry.
+A separate log entry will be created for each seen value combinations seen in the extra params
+and these extra params will be appended to the log entry.
 
-Be very carefull when using extra params, and only include information you really need.
-If you include too many parameters, you could loose the advantage you gain by aggregating your logs
+Be very careful when using extra params, and only include information you really need.
+If you include too many parameters, you could lose the advantage you gain by aggregating your logs
 with this package.
