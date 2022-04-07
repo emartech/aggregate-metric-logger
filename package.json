@@ -32,8 +32,7 @@
     "@emartech/json-logger": "^3.1.0",
     "date-fns": "^2.3.0",
     "json-stable-stringify": "^1.0.1",
-    "lodash": "^4.17.15",
-    "uuid": "8.3.2"
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "@sinonjs/fake-timers": "9.1.1",

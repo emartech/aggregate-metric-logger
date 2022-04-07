@@ -1,6 +1,5 @@
 'use strict';
 
-const { v4: uuid } = require('uuid');
 const loggerFactory = require('@emartech/json-logger');
 const { getSeconds, startOfMinute, addSeconds } = require('date-fns');
 const { omit, pick, fromPairs, toPairs } = require('lodash');
@@ -9,22 +8,16 @@ const util = require('util');
 
 module.exports = ({
   enabled = true,
-  namespace = 'aggregate-metric-logger',
-  inProgressMeasurementWarningLimit = 10000
+  namespace = 'aggregate-metric-logger'
 } = {}) => {
   const logger = loggerFactory(namespace);
 
   const thresholdsByTag = {};
-  let measurements = {};
   let metrics = {};
   let initialized = false;
 
   const flush = () => {
     logMetrics();
-    const inProgressMeasurementCount = Object.keys(measurements).length;
-    if (inProgressMeasurementCount > inProgressMeasurementWarningLimit) {
-      logger.warn('too-many-in-progress-metric-log-measurements', { count: inProgressMeasurementCount });
-    }
     metrics = {};
     setupNextFlush();
   };
@@ -124,22 +117,13 @@ module.exports = ({
       addMeasurement({ method: 'fatal', tag, params, value: 1, countOnly: true });
     },
     start(tag, params = {}) {
-      const id = uuid();
-      measurements[id] = { tag, params, start: Date.now() };
-      return id;
+      return { tag, params, start: Date.now() };
     },
-    stop(measurementId) {
-      const measurement = measurements[measurementId];
-      if (!measurement) return;
-
+    stop(measurement) {
       addMeasurement({
         ...pick(measurement, ['tag', 'params']),
         value: Date.now() - measurement.start
       });
-      delete measurements[measurementId];
-    },
-    cancel(measurementId) {
-      delete measurements[measurementId];
     }
   };
 };

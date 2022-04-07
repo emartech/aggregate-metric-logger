@@ -15,7 +15,7 @@ beforeEach(() => {
 afterEach(() => clock.uninstall());
 
 describe('metricLogger', () => {
-  describe('measure', () => {
+  describe('#measure', () => {
     it('should log a single measurement at the next flush period', () => {
       metricLogger.measure('elfogyasztot-tap', 4);
 
@@ -124,6 +124,17 @@ describe('metricLogger', () => {
     });
   });
 
+  describe('#start', () => {
+    it('should return a measurement object with the given tag, params and start time', () => {
+      const fakeCurrentTimestamp = 2323434543;
+      clock.setSystemTime(fakeCurrentTimestamp);
+
+      const measurement = metricLogger.start('test-tag', { foo: 'bar' });
+
+      expect(measurement).toEqual({ tag: 'test-tag', params: { foo: 'bar' }, start: fakeCurrentTimestamp });
+    });
+  });
+
   describe('start/stop', () => {
     it('should log min, max, count and sum when log was called only once', () => {
       const measurementId = metricLogger.start('utlegeles');
@@ -142,12 +153,12 @@ describe('metricLogger', () => {
     });
 
     it('should aggregate metrics for two measurements and log after a timeout', () => {
-      const measurement1Id = metricLogger.start('utlegeles');
-      const measurement2Id = metricLogger.start('utlegeles');
+      const measurement1 = metricLogger.start('utlegeles');
+      const measurement2 = metricLogger.start('utlegeles');
       clock.tick(50);
-      metricLogger.stop(measurement1Id);
+      metricLogger.stop(measurement1);
       clock.tick(20);
-      metricLogger.stop(measurement2Id);
+      metricLogger.stop(measurement2);
 
       clock.tick(60 * 1000);
       expect(Logger.prototype.info).toBeCalledWith('utlegeles', {
@@ -160,24 +171,9 @@ describe('metricLogger', () => {
       });
     });
 
-    it('should not count a measurment if it is cancelled with cancel', () => {
-      const measurement1Id = metricLogger.start('utlegeles');
-      const measurement2Id = metricLogger.start('utlegeles');
-      clock.tick(50);
-      metricLogger.stop(measurement1Id);
-      clock.tick(20);
-      metricLogger.cancel(measurement2Id);
-      metricLogger.stop(measurement2Id);
-
-      clock.tick(60 * 1000);
-      expect(Logger.prototype.info).toBeCalledWith('utlegeles', expect.objectContaining({
-        count: 1
-      }));
-    });
-
     it('should flush results at the closes minute:30', () => {
-      const measurementId = metricLogger.start('utlegeles');
-      metricLogger.stop(measurementId);
+      const measurement = metricLogger.start('utlegeles');
+      metricLogger.stop(measurement);
 
       clock.tick(29 * 1000 + 999);
       expect(Logger.prototype.info).not.toBeCalled();
@@ -187,8 +183,8 @@ describe('metricLogger', () => {
 
     it('should flush at next minute:30 if we are after 30 in current minute', () => {
       clock.tick(45 * 1000);
-      const measurementId = metricLogger.start('utlegeles');
-      metricLogger.stop(measurementId);
+      const measurement = metricLogger.start('utlegeles');
+      metricLogger.stop(measurement);
 
       clock.tick(44 * 1000);
       expect(Logger.prototype.info).not.toBeCalled();
@@ -252,18 +248,6 @@ describe('metricLogger', () => {
         average: 15000,
         is_metric: true
       });
-    });
-
-    it('should log warning if there are too many measurements in progress', () => {
-      jest.spyOn(Logger.prototype, 'warn');
-      const metricLogger = metricLoggerFactory({ inProgressMeasurementWarningLimit: 1 });
-
-      metricLogger.measure('kacsa');
-      metricLogger.start('nyavogas');
-      metricLogger.start('nyavogas');
-      clock.tick(60 * 1000);
-
-      expect(Logger.prototype.warn).toBeCalledWith('too-many-in-progress-metric-log-measurements', { count: 2 });
     });
   });
 
