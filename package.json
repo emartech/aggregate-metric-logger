@@ -25,6 +25,9 @@
     "url": "https://github.com/emartech/aggregate-metric-logger/issues"
   },
   "homepage": "https://github.com/emartech/aggregate-metric-logger#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@emartech/json-logger": "^3.1.0",
     "date-fns": "^2.3.0",
