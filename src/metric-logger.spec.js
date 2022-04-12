@@ -137,9 +137,9 @@ describe('metricLogger', () => {
 
   describe('start/stop', () => {
     it('should log min, max, count and sum when log was called only once', () => {
-      const measurementId = metricLogger.start('utlegeles');
+      const measurement = metricLogger.start('utlegeles');
       clock.tick(50);
-      metricLogger.stop(measurementId);
+      metricLogger.stop(measurement);
 
       clock.tick(60 * 1000);
       expect(Logger.prototype.info).toBeCalledWith('utlegeles', {
