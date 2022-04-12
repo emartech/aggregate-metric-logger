@@ -4,7 +4,7 @@ aggregate metrics in memory and log them every minute
 ## Setup
 
 Set `METRIC_LOGGER_ENABLED` env variable to `true` for aggregate-metric-logger to
-start collecting and logging measuremnts.
+start collecting and logging measurements.
 
 To change the default `aggregate-metric-logger` namespace used for logs, set
 `METRIC_LOGGER_NAMESPACE` to a custom value.
@@ -19,7 +19,7 @@ an extra `count` property to the logs and log them at the end of the minute with
 `@emartech/json-logger`.
 
 ```js
-const metrictLogger = require('aggregate-metric-logger')
+const metricLogger = require('@emartech/aggregate-metric-logger')
 
 metricLogger.warn('etwas-went-wrong', { customer_id: 11 });
 metricLogger.warn('etwas-went-wrong', { customer_id: 11 });
@@ -33,7 +33,7 @@ If you want aggregate measurements about something you need to simply call the `
 for each value:
 
 ```js
-const metrictLogger = require('aggregate-metric-logger')
+const metricLogger = require('@emartech/aggregate-metric-logger')
 
 metricLogger.measure('thing-to-measure', 14)
 metricLogger.measure('thing-to-measure', 20)
