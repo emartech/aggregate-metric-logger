@@ -61,10 +61,10 @@ function exampleIOHeavyFunction() {
 ### Group by extra parameters
 
 If you want to group by additional parameters inside a tag, you can pass down these extra
-params in an object to `count` and `start` as the last optional argument:
+params in an object to `measure` and `start` as the last optional argument:
 
 ```js
-metricLogger.count('thing-to-count', 14, { customer_id: 12 });
+metricLogger.measure('thing-to-count', 14, { customer_id: 12 });
 
 const measurement = metricLogger.start(
   'tag-for-the-measuement',
