@@ -4,7 +4,6 @@ const loggerFactory = require('@emartech/json-logger');
 const { getSeconds, startOfMinute, addSeconds } = require('date-fns');
 const { omit, pick, fromPairs, toPairs } = require('lodash');
 const stringify = require('json-stable-stringify');
-const util = require('util');
 
 module.exports = ({
   enabled = true,
@@ -94,10 +93,6 @@ module.exports = ({
     measure(tag, value, params = {}) {
       addMeasurement({ tag, value, params });
     },
-    count: util.deprecate(
-      (tag, value, params = {}) => addMeasurement({ tag, value, params }),
-      'count method is deprecated, use measure instead'
-    ),
     trace(tag, params = {}) {
       addMeasurement({ method: 'trace', tag, params, value: 1, countOnly: true });
     },
